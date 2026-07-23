@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Bilgisayara karşı oynanabilen tarayıcı tabanlı Amiral Battı oyunu."
+    />
+    <title>Amiral Battı</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="game.js" defer></script>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">TAKTİK DENİZ MUHAREBESİ</p>
+          <h1>Amiral Battı</h1>
+          <p class="intro">
+            Filon hazır. Rakibin sularında bir koordinat seç; gemilerin batmadan
+            önce beş düşman gemisini bul.
+          </p>
+        </div>
+        <button type="button" class="reset-button" id="resetButton">Yeni muharebe</button>
+      </header>
+
+      <section class="dashboard" aria-label="Oyun özeti">
+        <div>
+          <span>Durum</span>
+          <strong id="status" aria-live="polite">Hedef seç.</strong>
+        </div>
+        <div>
+          <span>Senin isabetin</span>
+          <strong id="playerHits">0 / 17</strong>
+        </div>
+        <div>
+          <span>Rakip isabeti</span>
+          <strong id="computerHits">0 / 17</strong>
+        </div>
+        <div>
+          <span>Sıra</span>
+          <strong id="turnLabel">Sende</strong>
+        </div>
+      </section>
+
+      <section class="battlefield">
+        <article class="board-panel">
+          <div class="board-title">
+            <div>
+              <p class="eyebrow">DÜŞMAN SULARI</p>
+              <h2>Hedef haritası</h2>
+            </div>
+            <span class="board-note">Ateş etmek için bir kare seç</span>
+          </div>
+          <div class="grid-shell">
+            <div class="axis axis-top" aria-hidden="true"></div>
+            <div class="axis axis-left" aria-hidden="true"></div>
+            <div class="ocean-grid enemy-grid" id="enemyGrid" aria-label="Düşman deniz alanı"></div>
+          </div>
+        </article>
+
+        <article class="board-panel">
+          <div class="board-title">
+            <div>
+              <p class="eyebrow">SENİN SULARIN</p>
+              <h2>Filo haritası</h2>
+            </div>
+            <span class="board-note">Gemiler her oyunda yeniden yerleşir</span>
+          </div>
+          <div class="grid-shell">
+            <div class="axis axis-top" aria-hidden="true"></div>
+            <div class="axis axis-left" aria-hidden="true"></div>
+            <div class="ocean-grid player-grid" id="playerGrid" aria-label="Senin deniz alanın"></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="fleet-log">
+        <div>
+          <p class="eyebrow">DÜŞMAN FİLOSU</p>
+          <div class="fleet" id="enemyFleet"></div>
+        </div>
+        <ol id="gameLog" aria-label="Muharebe günlüğü"></ol>
+      </section>
+    </main>
+  </body>
+</html>

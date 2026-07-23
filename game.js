@@ -115,6 +115,8 @@ let statusMessage;
 let playerStats;
 let computerStats;
 let shotAnimations;
+let longPressTimer;
+let lastTap = { shipId: null, time: 0 };
 
 const mainButtons = [
   { name: "Randomize", x: 25, y: BUTTON_Y, width: 150, height: 50 },
@@ -540,6 +542,44 @@ function shipAt(point) {
   return [...playerFleet].reverse().find((ship) => contains(shipDrawPosition(ship), point));
 }
 
+function rotateShip(ship) {
+  const oldHorizontal = ship.horizontal;
+  const oldRow = ship.row;
+  const oldColumn = ship.column;
+  const wasPlaced = ship.placed;
+
+  clearShipFromBoard(ship, playerBoard);
+  ship.horizontal = !ship.horizontal;
+
+  if (
+    wasPlaced &&
+    oldRow !== null &&
+    !placeShip(ship, oldRow, oldColumn, playerBoard)
+  ) {
+    ship.horizontal = oldHorizontal;
+    placeShip(ship, oldRow, oldColumn, playerBoard);
+    statusMessage = "Not enough room to rotate here";
+    return false;
+  }
+
+  statusMessage = "Ship rotated";
+  return true;
+}
+
+function restoreDraggedShip(dragState) {
+  const { ship, origin } = dragState;
+  ship.horizontal = origin.horizontal;
+  ship.row = origin.row;
+  ship.column = origin.column;
+  ship.x = origin.x;
+  ship.y = origin.y;
+  ship.placed = false;
+
+  if (origin.placed && origin.row !== null && origin.column !== null) {
+    placeShip(ship, origin.row, origin.column, playerBoard);
+  }
+}
+
 function findShip(fleet, id) {
   return fleet.find((ship) => ship.id === id);
 }
@@ -705,14 +745,41 @@ canvas.addEventListener("pointerdown", (event) => {
   if (phase === "deployment") {
     const ship = shipAt(pointer);
     if (ship) {
+      const drawPosition = shipDrawPosition(ship);
+      const origin = {
+        x: ship.x,
+        y: ship.y,
+        row: ship.row,
+        column: ship.column,
+        placed: ship.placed,
+        horizontal: ship.horizontal,
+      };
       clearShipFromBoard(ship, playerBoard);
       ship.placed = false;
+      ship.x = drawPosition.x;
+      ship.y = drawPosition.y;
       dragging = {
         ship,
-        offsetX: pointer.x - shipDrawPosition(ship).x,
-        offsetY: pointer.y - shipDrawPosition(ship).y,
+        offsetX: pointer.x - drawPosition.x,
+        offsetY: pointer.y - drawPosition.y,
+        startX: pointer.x,
+        startY: pointer.y,
+        moved: false,
+        origin,
       };
       canvas.setPointerCapture(event.pointerId);
+
+      if (event.pointerType !== "mouse") {
+        window.clearTimeout(longPressTimer);
+        const dragState = dragging;
+        longPressTimer = window.setTimeout(() => {
+          if (dragging !== dragState || dragState.moved) return;
+          restoreDraggedShip(dragState);
+          dragging = null;
+          rotateShip(ship);
+          canvas.releasePointerCapture(event.pointerId);
+        }, 520);
+      }
     }
   }
 });
@@ -720,13 +787,24 @@ canvas.addEventListener("pointerdown", (event) => {
 canvas.addEventListener("pointermove", (event) => {
   pointer = pointFromEvent(event);
   if (!dragging) return;
+  if (
+    Math.hypot(
+      pointer.x - dragging.startX,
+      pointer.y - dragging.startY,
+    ) > 12
+  ) {
+    dragging.moved = true;
+    window.clearTimeout(longPressTimer);
+  }
   dragging.ship.x = pointer.x - dragging.offsetX;
   dragging.ship.y = pointer.y - dragging.offsetY;
 });
 
 canvas.addEventListener("pointerup", (event) => {
   if (!dragging) return;
+  window.clearTimeout(longPressTimer);
   const ship = dragging.ship;
+  const wasTap = !dragging.moved;
   const position = shipDrawPosition(ship);
   const centerX = position.x + position.width / 2;
   const centerY = position.y + position.height / 2;
@@ -740,6 +818,27 @@ canvas.addEventListener("pointerup", (event) => {
   }
   dragging = null;
   canvas.releasePointerCapture(event.pointerId);
+
+  if (event.pointerType !== "mouse" && wasTap) {
+    const now = performance.now();
+    if (lastTap.shipId === ship.id && now - lastTap.time < 360) {
+      rotateShip(ship);
+      lastTap = { shipId: null, time: 0 };
+    } else {
+      lastTap = { shipId: ship.id, time: now };
+      statusMessage = "Double tap or hold to rotate";
+    }
+  }
+});
+
+canvas.addEventListener("pointercancel", (event) => {
+  window.clearTimeout(longPressTimer);
+  if (!dragging) return;
+  restoreDraggedShip(dragging);
+  dragging = null;
+  if (canvas.hasPointerCapture(event.pointerId)) {
+    canvas.releasePointerCapture(event.pointerId);
+  }
 });
 
 canvas.addEventListener("contextmenu", (event) => {
@@ -748,19 +847,7 @@ canvas.addEventListener("contextmenu", (event) => {
   const point = pointFromEvent(event);
   const ship = shipAt(point);
   if (!ship) return;
-  const oldHorizontal = ship.horizontal;
-  const oldRow = ship.row;
-  const oldColumn = ship.column;
-  clearShipFromBoard(ship, playerBoard);
-  ship.horizontal = !ship.horizontal;
-  if (
-    ship.placed &&
-    oldRow !== null &&
-    !placeShip(ship, oldRow, oldColumn, playerBoard)
-  ) {
-    ship.horizontal = oldHorizontal;
-    placeShip(ship, oldRow, oldColumn, playerBoard);
-  }
+  rotateShip(ship);
 });
 
 preload()

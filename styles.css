@@ -46,3 +46,81 @@ canvas {
 body.is-ready #loading {
   display: none;
 }
+
+.help-button {
+  position: absolute;
+  z-index: 4;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  min-height: 42px;
+  padding: 0 18px;
+  color: #f3f3f3;
+  border: 1px solid rgba(255, 255, 255, .55);
+  border-radius: 999px;
+  background: rgba(22, 22, 22, .84);
+  font: 700 13px "Courier New", monospace;
+  cursor: pointer;
+}
+
+.rules-overlay {
+  position: fixed;
+  z-index: 10;
+  inset: 0;
+  display: none;
+  padding: 20px;
+  place-items: center;
+  color: #f4f4f4;
+  background: rgba(10, 10, 10, .78);
+  backdrop-filter: blur(8px);
+}
+
+.rules-overlay.is-visible { display: grid; }
+
+.rules-dialog {
+  width: min(560px, 100%);
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
+  padding: clamp(26px, 6vw, 48px);
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 18px;
+  background: #1c1c1c;
+  box-shadow: 0 30px 100px rgba(0, 0, 0, .6);
+}
+
+.rules-kicker {
+  margin: 0 0 8px;
+  color: #f0b64e;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .18em;
+}
+
+.rules-dialog h1 {
+  margin: 0;
+  font-size: clamp(2rem, 7vw, 4rem);
+  line-height: 1;
+}
+
+.rules-dialog > p:not(.rules-kicker),
+.rules-dialog li {
+  color: #c4c4c4;
+  line-height: 1.55;
+}
+
+.rules-dialog ul { margin: 18px 0 24px; padding-left: 20px; }
+.rules-dialog li + li { margin-top: 8px; }
+
+.rules-primary {
+  width: 100%;
+  min-height: 50px;
+  border: 0;
+  border-radius: 999px;
+  color: #101010;
+  background: #f0b64e;
+  font: 700 14px "Courier New", monospace;
+  cursor: pointer;
+}
+
+@media (max-width: 560px) {
+  .help-button { min-height: 38px; padding: 0 14px; font-size: 12px; }
+}

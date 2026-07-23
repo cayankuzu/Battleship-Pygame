@@ -21,6 +21,21 @@
         height="960"
         aria-label="Battle Ship oyun alanı"
       ></canvas>
+      <button class="help-button" id="helpButton" type="button">Yardım</button>
     </main>
+    <div class="rules-overlay is-visible" id="rulesOverlay" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
+      <section class="rules-dialog">
+        <p class="rules-kicker">NASIL OYNANIR?</p>
+        <h1 id="rulesTitle">Battle Ship</h1>
+        <p>Yedi gemini kendi ızgarana yerleştir, ardından rakibin filosunu senden önce batır.</p>
+        <ul>
+          <li><strong>Yerleştir:</strong> Gemiyi sürükle; masaüstünde sağ tıkla, mobilde çift dokun veya basılı tutarak döndür.</li>
+          <li><strong>Hazırlık:</strong> Randomize otomatik dizer; tüm gemiler yerleşince Start’a bas.</li>
+          <li><strong>Ateş:</strong> Savaşta sağdaki bilgisayar ızgarasından bir kare seç.</li>
+          <li><strong>Kazan:</strong> Bilgisayarın yedi gemisinin tamamını önce batır.</li>
+        </ul>
+        <button class="rules-primary" id="closeRules" type="button">Oyuna başla</button>
+      </section>
+    </div>
   </body>
 </html>

@@ -1,5 +1,8 @@
 const canvas = document.querySelector("#game");
 const context = canvas.getContext("2d");
+const helpButton = document.querySelector("#helpButton");
+const rulesOverlay = document.querySelector("#rulesOverlay");
+const closeRules = document.querySelector("#closeRules");
 
 const WIDTH = 1260;
 const HEIGHT = 960;
@@ -100,6 +103,8 @@ let splashVolume = 0.05;
 let explosionVolume = 0.05;
 let gunshotVolume = 0.05;
 let musicStarted = false;
+let rulesOpen = true;
+let resumeMusicAfterRules = false;
 
 let playerBoard;
 let computerBoard;
@@ -626,6 +631,10 @@ function checkGameOver() {
 }
 
 function computerAttack() {
+  if (rulesOpen) {
+    window.setTimeout(computerAttack, 250);
+    return;
+  }
   if (gameOver || phase !== "battle") return;
   const choices = [];
   for (let row = 0; row < GRID; row += 1) {
@@ -692,6 +701,7 @@ function handleSfxButton(name) {
 
 canvas.addEventListener("pointerdown", (event) => {
   event.preventDefault();
+  if (rulesOpen) return;
   pointer = pointFromEvent(event);
   if (!musicStarted) {
     musicStarted = true;
@@ -848,6 +858,21 @@ canvas.addEventListener("contextmenu", (event) => {
   const ship = shipAt(point);
   if (!ship) return;
   rotateShip(ship);
+});
+
+helpButton.addEventListener("click", () => {
+  rulesOpen = true;
+  resumeMusicAfterRules = musicStarted && !audio.music.paused;
+  audio.music.pause();
+  closeRules.textContent = "Oyuna dön";
+  rulesOverlay.classList.add("is-visible");
+});
+
+closeRules.addEventListener("click", () => {
+  rulesOpen = false;
+  rulesOverlay.classList.remove("is-visible");
+  if (resumeMusicAfterRules) audio.music.play().catch(() => {});
+  resumeMusicAfterRules = false;
 });
 
 preload()

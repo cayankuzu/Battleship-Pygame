@@ -28,4 +28,4 @@ Colab sürümü: [Battleship Türkçe Açıklamalar](https://colab.research.goog
 
 [Amiral Battı'yı tarayıcıda oyna](https://battleship-pygame.vercel.app/)
 
-Web sürümü iki rastgele filo, bilgisayar rakibi, dönüşümlü atışlar ve gemi batırma durumlarını kurulum gerektirmeden çalıştırır.
+Web sürümü özgün 1260×960 Pygame arayüzünü, yedi gemiyi, sürükleme/döndürme ve rastgele yerleştirmeyi, dönüşümlü atışları, skor tablosunu, MP3 oynatıcıyı ve bağımsız SFX kontrollerini tarayıcıya taşır.

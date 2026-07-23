@@ -1,0 +1,16 @@
+__pycache__/
+*.py
+*.pyc
+*.ipynb
+*.mp4
+*.pdf
+battleship_screenshot.png
+original_codes/
+ipynb_files/
+assets/images/background/*.jpg
+assets/images/grids/grid_faint.png
+assets/images/radar_base/
+assets/images/radar_blip/
+assets/images/tokens/explosion/
+assets/images/tokens/fireloop/
+assets/images/ships/*/*gun.png

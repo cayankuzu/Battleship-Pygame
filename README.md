@@ -23,3 +23,9 @@ python battleship.py
 Kod `assets/images` ve `assets/sounds` klasörlerini bekler. Telifli müzik dosyaları bu depoya dahil edilmemiştir; kendi ses dosyalarınızı kodda belirtilen adlarla ekleyebilirsiniz.
 
 Colab sürümü: [Battleship Türkçe Açıklamalar](https://colab.research.google.com/drive/1eg8Icicn8qVi9wrtUO_9aO6OigZiDJYm?usp=sharing)
+
+## Web sürümü
+
+[Amiral Battı'yı tarayıcıda oyna](https://battleship-pygame.vercel.app/)
+
+Web sürümü iki rastgele filo, bilgisayar rakibi, dönüşümlü atışlar ve gemi batırma durumlarını kurulum gerektirmeden çalıştırır.
